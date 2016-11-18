@@ -9,11 +9,11 @@
 wikiRevisions <- function(titles, lang) {
   rvc <- ''
   url <- ''
-  
+
   getRevDates <- function(title, rvid, url) {
     pl <- list(
-      action='query', 
-      prop='revisions', 
+      action='query',
+      prop='revisions',
       titles=title,
       format='json',
       rvlimit='500')
@@ -28,12 +28,12 @@ wikiRevisions <- function(titles, lang) {
     rvc <<- res$continue$rvcontinue
     return(date)
   }
-  
+
   getRevisionHistory <- function(title, lang){
     results <- vector()
     rvc <<-''
     url <- paste("https://", lang, ".wikipedia.org/w/api.php", sep = "")
-    
+
     # loop until res$continue$rvcontinue is null
     while(!is.null(rvc)) {
       t <- getRevDates(title, rvc, url)
@@ -41,12 +41,11 @@ wikiRevisions <- function(titles, lang) {
     }
     date_posix <-  as.POSIXct(strptime(results, "%Y-%m-%dT%H:%M:%SZ", tz="UTC"))
     rt <- as.data.frame(date_posix)
-    rt <- rt %>% 
-      dplyr::mutate(date = as.Date(date_posix), 
-                    title=title) 
+    rt <- dplyr::mutate(rt, date = as.Date(date_posix),
+                        title=title)
     return(rt)
   }
-  
+
   df <- do.call(rbind, lapply(titles, getRevisionHistory, lang=lang))
   return(df)
 }
