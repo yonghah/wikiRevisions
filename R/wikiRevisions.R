@@ -4,7 +4,7 @@
 #' @param lang language of wikipedia such as en
 #' @return data frame with date_posix, date, title
 #' @examples
-#'  df <- wikiRevisions(c("seoul", "tokyo"),"en")
+#' df <- wikiRevisions(c("Bucheon", "Goyang"),"en")
 
 wikiRevisions <- function(titles, lang) {
   rvc <- ''
